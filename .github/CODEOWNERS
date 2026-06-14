@@ -1,0 +1,6 @@
+# CODEOWNERS file for nvd-cve-mcp-server
+# This file defines who is responsible for reviewing changes to specific files or directories.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global ownership - @millsks owns the entire repository by default
+* @millsks
