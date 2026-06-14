@@ -1,0 +1,46 @@
+name: Stale Issues and PRs
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/stale@v10
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had recent activity.
+            It will be closed if no further activity occurs within 7 days.
+
+            If this issue is still relevant, please add a comment, remove the 'stale' label, or provide updated context.
+          close-issue-message: |
+            This issue has been automatically closed due to inactivity. Feel free to reopen or create a new issue with updated information.
+          days-before-issue-stale: 60
+          days-before-issue-close: 7
+          stale-issue-label: "stale"
+          exempt-issue-labels: "pinned,security,bug,enhancement,good first issue"
+
+          stale-pr-message: |
+            This pull request has been automatically marked as stale because it has not had recent activity.
+            It will be closed if no further activity occurs within 14 days.
+
+            Please rebase on the latest main branch, address any feedback, or add a comment to keep it open.
+          close-pr-message: |
+            This pull request has been automatically closed due to inactivity. Feel free to reopen or create a fresh PR.
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          stale-pr-label: "stale"
+          exempt-pr-labels: "pinned,security,dependencies,automated"
+
+          operations-per-run: 100
+          remove-stale-when-updated: true
+          ascending: true

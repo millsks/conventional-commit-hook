@@ -1,0 +1,93 @@
+name: Code Quality Monitoring
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+jobs:
+  quality-metrics:
+    name: Code Quality Metrics
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Pixi
+        uses: prefix-dev/setup-pixi@v0.9.5
+        with:
+          pixi-version: v0.67.2
+          cache: true
+
+      - name: Install dependencies
+        run: pixi install
+
+      - name: Generate coverage report
+        run: |
+          pixi run cov
+          pip install coverage
+          coverage json --pretty-print
+
+      - name: Generate complexity report
+        run: |
+          pip install radon
+          radon cc src/ --json > complexity-report.json || true
+          radon mi src/ --json > maintainability-report.json || true
+
+      - name: Check code quality thresholds
+        run: |
+          python << 'EOF'
+          import json
+
+          with open('coverage.json') as f:
+              coverage_data = json.load(f)
+              total_coverage = coverage_data['totals']['percent_covered']
+              print(f"Current coverage: {total_coverage:.1f}%")
+              if total_coverage < 90:
+                  with open('quality-issues.txt', 'a') as issues:
+                      issues.write(f"- Coverage is {total_coverage:.1f}% (below 90% threshold)\n")
+
+          try:
+              with open('complexity-report.json') as f:
+                  complexity_data = json.load(f)
+                  high_complexity = []
+                  for file_data in complexity_data.values():
+                      if isinstance(file_data, list):
+                          for item in file_data:
+                              if item.get('complexity', 0) > 10:
+                                  high_complexity.append(f"{item['name']} (complexity: {item['complexity']})")
+                  if high_complexity:
+                      with open('quality-issues.txt', 'a') as issues:
+                          issues.write("- High complexity functions:\n")
+                          for func in high_complexity:
+                              issues.write(f"  - {func}\n")
+          except (FileNotFoundError, json.JSONDecodeError):
+              print("Could not analyze complexity data")
+          EOF
+
+      - name: Create issue for quality concerns
+        if: hashFiles('quality-issues.txt') != ''
+        uses: peter-evans/create-issue-from-file@v6
+        with:
+          token: ${{ secrets.RELEASE_PAT }}
+          title: "Code Quality Report - Issues Detected"
+          content-filepath: quality-issues.txt
+          labels: |
+            code-quality
+            automated
+            technical-debt
+
+      - name: Upload quality reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: quality-reports
+          path: |
+            coverage.json
+            complexity-report.json
+            maintainability-report.json
+          retention-days: 30
