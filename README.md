@@ -155,4 +155,8 @@ pixi run bootstrap
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 Kevin Mills
+[MIT](LICENSE)
+
+<br/><br/>
+
+_Inspired by matthorgan's [`pre-commit-conventional-commits`](https://github.com/matthorgan/pre-commit-conventional-commits)._

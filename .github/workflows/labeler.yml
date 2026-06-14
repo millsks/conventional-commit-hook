@@ -30,6 +30,7 @@ jobs:
         uses: actions/labeler@v6
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
 
       - name: Add size labels to PRs
         if: github.event_name == 'pull_request'
