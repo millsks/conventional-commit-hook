@@ -23,8 +23,8 @@ jobs:
           pixi-version: v0.70.2
           cache: true
 
-      - name: Run unit tests
-        run: pixi run test
+      - name: Run tests with coverage
+        run: pixi run cov
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
