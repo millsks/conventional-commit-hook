@@ -1,0 +1,7 @@
+- id: conventional-commit-hook
+  name: Conventional Commits
+  description: Enforce the Conventional Commits specification on commit messages
+  entry: conventional-commit-hook
+  language: python
+  stages: [commit-msg]
+  always_run: true
