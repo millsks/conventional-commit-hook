@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.conventionalcommits.org)",
+      "WebFetch(domain:pre-commit.com)",
+      "Bash(gh api *)",
+      "Bash(pixi init *)"
+    ]
+  }
+}
