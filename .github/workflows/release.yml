@@ -98,9 +98,9 @@ jobs:
 
       - name: Setup pixi
         if: steps.should_skip.outputs.skip != 'true'
-        uses: prefix-dev/setup-pixi@v0.9.5
+        uses: prefix-dev/setup-pixi@v0.9.6
         with:
-          pixi-version: v0.67.2
+          pixi-version: v0.70.2
 
       - name: Set release tag
         id: set_release_tag
