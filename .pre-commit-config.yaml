@@ -9,7 +9,7 @@ repos:
     rev: v1.16.0
     hooks:
       - id: mypy
-        additional_dependencies: [structlog>=24.0.0]
+        additional_dependencies: [structlog>=24.0.0, pytest]
         args: [--config-file=pyproject.toml]
   - repo: local
     hooks:
