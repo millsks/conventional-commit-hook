@@ -157,4 +157,6 @@ pixi run bootstrap
 
 [MIT](LICENSE)
 
-Inspired by matthorgan's [`pre-commit-conventional-commits`](https://github.com/matthorgan/pre-commit-conventional-commits).
+<br\><br\>
+
+_Inspired by matthorgan's [`pre-commit-conventional-commits`](https://github.com/matthorgan/pre-commit-conventional-commits)._
