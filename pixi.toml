@@ -1,0 +1,41 @@
+[workspace]
+name = "conventional-commit-hook"
+version = "0.1.0"
+description = "A pre-commit hook that enforces Conventional Commits standards on commit messages"
+authors = ["Kevin Mills <millsks@gmail.com>"]
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64", "osx-arm64", "osx-64", "win-64"]
+
+[dependencies]
+python = ">=3.10,<4"
+structlog = ">=24.0.0"
+
+[feature.dev.dependencies]
+pytest = ">=8.3.0,<9"
+pytest-cov = ">=5.0.0,<7"
+mypy = ">=1.8.0,<2"
+ruff = ">=0.4.0,<1"
+hatch = ">=1.12.0,<2"
+git-cliff = ">=2.0.0,<3"
+twine = ">=6.0.0,<7"
+pre-commit = ">=3.5.0,<4"
+
+[pypi-dependencies]
+conventional-commit-hook = { path = ".", editable = true }
+
+[environments]
+default = ["dev"]
+
+[tasks]
+bootstrap = "pre-commit install --hook-type pre-commit && python scripts/install_hooks.py"
+fmt = "ruff format ."
+lint = "ruff check ."
+check = "mypy src/ tests/"
+test = "pytest tests/unit/"
+test-integration = "pytest tests/integration/"
+cov = "pytest tests/ --cov=src/conventional_commit_hook --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=90"
+build = "hatch build -t wheel -t sdist"
+check-package = "twine check dist/*"
+build-conda = "pixi build --path recipe"
+changelog = "git-cliff --output CHANGELOG.md"
+ci = "pre-commit run --all-files && pixi run build && pixi run check && pixi run lint && pixi run cov"
