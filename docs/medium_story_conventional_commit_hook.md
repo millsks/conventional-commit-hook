@@ -200,23 +200,76 @@ flowchart TD
 
 Each step is automated. The only human input required is writing a well-formed commit message — something the hook enforces at the point of commit.
 
-## Existing Solutions and Open Source Inspiration
+## The Open Source Ecosystem: Alternatives and Prior Art
 
-This project wasn't built without prior art.
+[`conventional-commit-hook`](https://github.com/millsks/conventional-commit-hook) is [MIT licensed](https://github.com/millsks/conventional-commit-hook/blob/main/LICENSE) and fully open source — contributions, forks, and adaptations are welcome. It is one of several tools in a healthy ecosystem that addresses the same problem from different angles.
 
-While researching commit message validation tools for Python projects, I discovered [`pre-commit-conventional-commits`](https://github.com/matthorgan/pre-commit-conventional-commits) by matthorgan. The inspiration is acknowledged directly in the README of my repository.
+### Tools in This Space
 
-That project demonstrated an elegant approach to enforcing Conventional Commits through the [pre-commit](https://pre-commit.com/) framework and proved that commit message validation could fit naturally into existing developer workflows.
+The open source community has built commit message validators across multiple language ecosystems. Choosing the right tool depends on which ecosystem you work in, how you manage git hooks, and how much flexibility you need.
 
-However, I also noticed that development activity had slowed significantly. The project was not abandoned, but it had not been updated for quite some time.
+| Tool | Runtime | Hook mechanism | Focus |
+| --- | --- | --- | --- |
+| [conventional-commit-hook](https://github.com/millsks/conventional-commit-hook) | Python | [pre-commit](https://pre-commit.com/) | Validates against the full Conventional Commits spec |
+| [commitlint](https://commitlint.js.org/) | Node.js | [Husky](https://typicode.github.io/husky/) / pre-commit | Highly configurable JS linter with plugin ecosystem |
+| [compilerla/conventional-pre-commit](https://github.com/compilerla/conventional-pre-commit) | Shell | [pre-commit](https://pre-commit.com/) | Regex-based, language-agnostic |
+| [pre-commit-conventional-commits](https://github.com/matthorgan/pre-commit-conventional-commits) | Python | [pre-commit](https://pre-commit.com/) | Python validator, prior art for this project |
+| [gitlint](https://jorisroovers.com/gitlint/) | Python | pre-commit / standalone | Flexible rule-based linter |
+| [Cocogitto](https://docs.cocogitto.io/) | Rust | Standalone binary | All-in-one: lint + changelog + versioning |
+| [commitizen](https://commitizen-tools.github.io/commitizen/) | Python | pre-commit | Interactive commit builder + version bumping |
 
-That's an important distinction.
+```mermaid
+flowchart LR
+    subgraph js["JavaScript / Node.js"]
+        HK["Husky"]
+        CL["commitlint"]
+        HK --> CL
+    end
+    subgraph py["Python"]
+        CC["conventional-commit-hook"]
+        GL["gitlint"]
+        CZ["commitizen"]
+    end
+    subgraph shell["Shell / Language-agnostic"]
+        CP["compilerla/<br/>conventional-pre-commit"]
+        MH["matthorgan/<br/>pre-commit-conventional-commits"]
+    end
+    subgraph rs["Rust / Cross-platform"]
+        COG["Cocogitto"]
+    end
+    precommit(["pre-commit framework"])
+    CC --> precommit
+    CP --> precommit
+    MH --> precommit
+    CL -.->|"also supports"| precommit
+    CZ --> precommit
+```
 
-Many open source projects reach a stable state where they continue to function well, even though active development becomes infrequent. There was nothing inherently wrong with the original project. It simply wasn't evolving alongside the tooling and workflows I was using.
+### The Node.js Ecosystem: commitlint + Husky
+
+The most widely adopted combination in JavaScript projects is [commitlint](https://commitlint.js.org/) paired with [Husky](https://typicode.github.io/husky/). Commitlint is highly configurable — teams add `@commitlint/config-conventional` to enforce the same Conventional Commits rules, and Husky manages the git hook wiring. It is the de facto standard for Node.js monorepos and frontend projects.
+
+For Python projects, pulling in a Node.js runtime solely to validate commit messages is an uncomfortable dependency. That friction motivates a Python-native alternative.
+
+### The Python Landscape
+
+[gitlint](https://jorisroovers.com/gitlint/) is a flexible, rule-based Python commit message linter. It supports custom rules and works well as a general-purpose linter, but enforcing the full Conventional Commits spec requires additional configuration rather than being available out of the box.
+
+[commitizen](https://commitizen-tools.github.io/commitizen/) takes a different angle: instead of validating a message after the developer types it, it guides the developer through an interactive prompt to construct a valid commit. It also handles version bumping tied to commit types. It is a richer tool but changes the commit workflow more significantly and requires more setup.
+
+### The Rust-Based All-in-One: Cocogitto
+
+[Cocogitto](https://docs.cocogitto.io/) (`cog`) is a Rust-based toolchain that handles linting, changelog generation, and semantic versioning in a single binary. It is cross-platform and fast. If you want one tool that owns the entire Conventional Commits workflow without wiring together `pre-commit` + `git-cliff` separately, Cocogitto is worth evaluating.
+
+### Prior Art: matthorgan's pre-commit-conventional-commits
+
+One important influence on this project is [`pre-commit-conventional-commits`](https://github.com/matthorgan/pre-commit-conventional-commits) by matthorgan. It demonstrated that commit message validation could be delivered as a focused [pre-commit](https://pre-commit.com/) hook for Python projects without heavy dependencies — the same model that `conventional-commit-hook` follows.
+
+Development activity on that project had slowed by the time I started building this, which is common for stable open source tools that reach feature completeness. That wasn't a criticism — it was the gap I wanted to fill with an actively maintained alternative.
 
 ## Why I Built conventional-commit-hook
 
-The motivation behind [`conventional-commit-hook`](https://github.com/millsks/conventional-commit-hook) was straightforward: I wanted a lightweight, actively maintained commit message validator designed specifically for modern Python development workflows.
+With all these alternatives available, the motivation behind [`conventional-commit-hook`](https://github.com/millsks/conventional-commit-hook) was specific: I wanted a lightweight, actively maintained commit message validator designed for modern Python development workflows — one that installs cleanly from both [PyPI](https://pypi.org/project/conventional-commit-hook/) and [conda-forge](https://anaconda.org/conda-forge/conventional-commit-hook), fits naturally into the [pre-commit](https://pre-commit.com/) framework, and requires no Node.js or Rust toolchain.
 
 Key design decisions:
 
