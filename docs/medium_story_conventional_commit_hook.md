@@ -210,10 +210,10 @@ The open source community has built commit message validators across multiple la
 
 | Tool | Runtime | Hook mechanism | Focus |
 | --- | --- | --- | --- |
-| [conventional-commit-hook](https://github.com/millsks/conventional-commit-hook) | Python | [pre-commit](https://pre-commit.com/) | Validates against the full Conventional Commits spec |
-| [commitlint](https://commitlint.js.org/) | Node.js | [Husky](https://typicode.github.io/husky/) / pre-commit | Highly configurable JS linter with plugin ecosystem |
-| [compilerla/conventional-pre-commit](https://github.com/compilerla/conventional-pre-commit) | Shell | [pre-commit](https://pre-commit.com/) | Regex-based, language-agnostic |
-| [pre-commit-conventional-commits](https://github.com/matthorgan/pre-commit-conventional-commits) | Python | [pre-commit](https://pre-commit.com/) | Python validator, prior art for this project |
+| [conventional-commit-hook](https://github.com/millsks/conventional-commit-hook) | Python | pre-commit | Validates against the full Conventional Commits spec |
+| [commitlint](https://commitlint.js.org/) | Node.js | Husky / pre-commit | Highly configurable JS linter with plugin ecosystem |
+| [compilerla/conventional-pre-commit](https://github.com/compilerla/conventional-pre-commit) | Shell | pre-commit | Regex-based, language-agnostic |
+| [pre-commit-conventional-commits](https://github.com/matthorgan/pre-commit-conventional-commits) | Python | pre-commit | Python validator, prior art for this project |
 | [gitlint](https://jorisroovers.com/gitlint/) | Python | pre-commit / standalone | Flexible rule-based linter |
 | [Cocogitto](https://docs.cocogitto.io/) | Rust | Standalone binary | All-in-one: lint + changelog + versioning |
 | [commitizen](https://commitizen-tools.github.io/commitizen/) | Python | pre-commit | Interactive commit builder + version bumping |
